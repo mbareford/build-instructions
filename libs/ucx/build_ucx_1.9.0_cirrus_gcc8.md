@@ -50,14 +50,12 @@ Build and install UCX for GPU (CUDA 10.1)
 -----------------------------------------
 
 ```bash
-module unload gcc/8.2.0
-module load nvidia/cuda-10.1
-module load nvidia/mathlibs-10.1
-module swap gcc gcc/8.2.0
+module load gcc/8.2.0
 
 ./configure CC=gcc CXX=g++ FC=gfortran \
   LDFLAGS="-L/lustre/sw/nvidia/hpcsdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib/stubs" \
   --with-cuda=/lustre/sw/nvidia/hpcsdk/Linux_x86_64/cuda/10.1 \
+  --with-mlx5-dv \
   --prefix=/lustre/sw/${UCX_LABEL}/${UCX_VERSION}-cuda-10.1
 
 make
@@ -70,14 +68,11 @@ Build and install UCX for GPU (CUDA 10.2)
 -----------------------------------------
 
 ```bash
-module unload gcc/8.2.0
-module swap nvidia/cuda-10.1 nvidia/cuda-10.2
-module swap nvidia/mathlibs-10.1 nvidia/mathlibs-10.2  
-module swap gcc gcc/8.2.0
+module load gcc/8.2.0
 
 ./configure CC=gcc CXX=g++ FC=gfortran \
-  LDFLAGS="-L/lustre/sw/nvidia/hpcsdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib/stubs" \
-  --with-cuda=/lustre/sw/nvidia/hpcsdk/Linux_x86_64/cuda/10.2 \
+  --with-cuda=${NVIDIA_ROOT}/hpcsdk-212/Linux_x86_64/21.2/cuda/10.2 \
+  --with-mlx5-dv \
   --prefix=/lustre/sw/${UCX_LABEL}/${UCX_VERSION}-cuda-10.2
 
 make

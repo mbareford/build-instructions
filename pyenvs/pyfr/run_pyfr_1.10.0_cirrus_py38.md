@@ -25,8 +25,19 @@ Launch a PyFR job (via srun) that uses 16 GPUs across 4 compute nodes
 #SBATCH --gres=gpu:4
 #SBATCH --account=[budget code]
 
-module load nvidia/cuda-10.2
-module load nvidia/mathlibs-10.2
+export NVSDKROOT=/lustre/sw/nvidia/hpcsdk-212/Linux_x86_64/21.2
+export CUDAROOT=${NVSDKROOT}/cuda/10.2
+export MATHLIBSROOT=${NVSDKROOT}/math_libs/10.2
+
+export CUDA_HOME=${CUDAROOT}
+export CUDA_DIR=${CUDAROOT}
+export MATHLIB=${MATHLIBSROOT}/lib64
+export PATH=${CUDAROOT}/bin:${PATH}
+export LPATH=${CUDAROOT}/bin:${LPATH}
+export CPATH=${MATHLIBSROOT}/include:${CUDAROOT}/include:${CPATH}
+export LIBRARY_PATH=${MATHLIBSROOT}/lib64:${CUDAROOT}/lib64:${LIBRARY_PATH}
+export LD_LIBRARY_PATH=${MATHLIBSROOT}/lib64:${CUDAROOT}/lib64:${LD_LIBRARY_PATH}
+
 module load boost/1.73.0
 module load openmpi/4.1.0-cuda-10.2
 
@@ -62,8 +73,19 @@ Launch a PyFR job (via mpirun) that uses 16 GPUs across 4 compute nodes
 #SBATCH --gres=gpu:4
 #SBATCH --account=[budget code]
 
-module load nvidia/cuda-10.2
-module load nvidia/mathlibs-10.2
+export NVSDKROOT=/lustre/sw/nvidia/hpcsdk-212/Linux_x86_64/21.2
+export CUDAROOT=${NVSDKROOT}/cuda/10.2
+export MATHLIBSROOT=${NVSDKROOT}/math_libs/10.2
+
+export CUDA_HOME=${CUDAROOT}
+export CUDA_DIR=${CUDAROOT}
+export MATHLIB=${MATHLIBSROOT}/lib64
+export PATH=${CUDAROOT}/bin:${PATH}
+export LPATH=${CUDAROOT}/bin:${LPATH}
+export CPATH=${MATHLIBSROOT}/include:${CUDAROOT}/include:${CPATH}
+export LIBRARY_PATH=${MATHLIBSROOT}/lib64:${CUDAROOT}/lib64:${LIBRARY_PATH}
+export LD_LIBRARY_PATH=${MATHLIBSROOT}/lib64:${CUDAROOT}/lib64:${LD_LIBRARY_PATH}
+
 module load boost/1.73.0
 module load openmpi/4.1.0-cuda-10.2
 
@@ -94,7 +116,7 @@ Loading the `openmpi/4.1.0-cuda-10.2` module sets a collection of OpenMPI MCA en
 OMPI_MCA_opal_common_ucx_opal_mem_hooks=1
 OMPI_MCA_UCX_MEM_MMAP_HOOK_MODE=none
 OMPI_MCA_btl_openib_allow_ib=1
-OMPI_MCA_btl_openib_if_include=mlx5_0:1,mlx5_1:1
+OMPI_MCA_btl_openib_if_include=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1
 OMPI_MCA_pml=ucx
 OMPI_MCA_btl_openib_warn_default_gid_prefix=0
 ```
@@ -102,7 +124,7 @@ OMPI_MCA_btl_openib_warn_default_gid_prefix=0
 MCA stands for Modular Component Architecture. The settings above ensure that the openib Byte Transfer Layer (BTL)
 is active and that the UCX API is used for the Point-to-point Management Layer (PML).
 
-The Cirrus GPU nodes each have two Mellanox Infiniband devices, labelled `mlx5_0` and `mlx5_1`. The setting for the
+The Cirrus GPU nodes each have four Mellanox Infiniband devices, labelled `mlx5_0` to `mlx5_3`. The setting for the
 `btl_openib_if_include` variable ensures that those devices are used for the openib BTL (the number after the colon
 indicates the port).
 

@@ -104,8 +104,19 @@ PYCUDA_NAME=${PYCUDA_LABEL}-${PYCUDA_VERSION}
 
 CUDA_VERSION=10.2
 
-module load nvidia/cuda-${CUDA_VERSION}
-module load nvidia/mathlibs-${CUDA_VERSION}
+export NVSDKROOT=/lustre/sw/nvidia/hpcsdk-212/Linux_x86_64/21.2
+export CUDAROOT=${NVSDKROOT}/cuda/${CUDA_VERSION}
+export MATHLIBSROOT=${NVSDKROOT}/math_libs/${CUDA_VERSION}
+
+export CUDA_HOME=${CUDAROOT}
+export CUDA_DIR=${CUDAROOT}
+export MATHLIB=${MATHLIBSROOT}/lib64
+export PATH=${CUDAROOT}/bin:${PATH}
+export LPATH=${CUDAROOT}/bin:${LPATH}
+export CPATH=${MATHLIBSROOT}/include:${CUDAROOT}/include:${CPATH}
+export LIBRARY_PATH=${MATHLIBSROOT}/lib64:${CUDAROOT}/lib64:${LIBRARY_PATH}
+export LD_LIBRARY_PATH=${MATHLIBSROOT}/lib64:${CUDAROOT}/lib64:${LD_LIBRARY_PATH}
+
 module load boost/1.73.0
 
 mkdir -p ${PYCUDA_LABEL}
@@ -117,13 +128,15 @@ rm ${PYCUDA_NAME}.tar.gz
 
 cd ${PYCUDA_NAME}
 
-python configure.py --cuda-root=${CUDAROOT} --no-use-shipped-boost --boost-python-libname=boost_python-py36 --ldflags="-L/lustre/sw/nvidia/hpcsdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib/stubs"
+python configure.py --cuda-root=${CUDAROOT} --no-use-shipped-boost --boost-python-libname=boost_python-py36"
 make
 make install
+make clean
 ```
 
-Notice that the python configure command for pycuda has two anomalous settings, the `py36` suffix used for the boost python library name and the `11.0` version tag used in the path to the CUDA stub libraries.
-These are not mistakes merely workarounds required to get pycuda to build. These settings do not appear to compromise the PyFR installation (e.g., scaling runs perform as expected).
+Notice that the python configure command for pycuda has one anomalous setting, the `py36` suffix used for the boost python library name.
+It's not a mistake, merely a workaround required to get pycuda to build.
+The setting does not appear to compromise the PyFR installation (e.g., scaling runs perform as expected).
 
 
 Install other python packages required by PyFR
@@ -134,7 +147,6 @@ pip install appdirs
 pip install gimmik
 pip install h5py
 pip install mako
-pip install mpi4py
 pip install numpy
 pip install pytools
 ```
@@ -143,7 +155,7 @@ pip install pytools
 Install PyFR itself
 -------------------
 ```bash
-pip install pyfr
+pip install pyfr==1.10
 ```
 
 
