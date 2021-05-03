@@ -83,6 +83,7 @@ MPI4PY_ROOT=${PRFX}/${MPI4PY_LABEL}/${MPI4PY_VERSION}-ompi-${OPENMPI_VERSION}
 python setup.py clean --all
 python setup.py build
 python setup.py install --prefix=${MPI4PY_ROOT}
+python setup.py clean --all
 
 echo "ROOT=${MPI4PY_ROOT}" > ${MPI4PY_ROOT}/env.sh
 echo "export LIBRARY_PATH=\${ROOT}/lib:\${LIBRARY_PATH}" >> ${MPI4PY_ROOT}/env.sh
@@ -128,7 +129,7 @@ rm ${PYCUDA_NAME}.tar.gz
 
 cd ${PYCUDA_NAME}
 
-python configure.py --cuda-root=${CUDAROOT} --no-use-shipped-boost --boost-python-libname=boost_python-py36"
+python configure.py --cuda-root=${CUDAROOT} --no-use-shipped-boost --boost-python-libname=boost_python-py36
 make
 make install
 make clean
